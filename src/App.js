@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { routes, getAirlineById } from "./data";
+import { routes, getAirlineById, getAirportByCode } from "./data";
 import Table from "./components/Table";
 
 // const routes = [
@@ -11,9 +11,15 @@ import Table from "./components/Table";
 
 const App = () => {
   function formatValue(property, value) {
-    // if (property === "airline") {
-    //   return getAirlineById(value);
-    // }
+    if (property === "airline") {
+      const formattedValue = getAirlineById(value);
+      if (formattedValue) return formattedValue[0].name;
+    }
+
+    if (property === "src" || property === "dest") {
+      const formattedValue = getAirportByCode(value);
+      if (formattedValue) return formattedValue[0].name;
+    }
 
     return value;
   }
@@ -31,12 +37,7 @@ const App = () => {
       </header>
       <section>
         <p>Welcome to the app!</p>
-        <Table
-          className="routes-table"
-          columns={columns}
-          rows={routes}
-          format={formatValue}
-        />
+        <Table columns={columns} rows={routes} format={formatValue} />
       </section>
     </div>
   );
