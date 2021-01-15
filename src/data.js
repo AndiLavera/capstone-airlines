@@ -3879,4 +3879,18 @@ const getAirlineById = (id) => airlines.filter((airline) => airline.id === id);
 const getAirportByCode = (code) =>
   airports.filter((airport) => airport.code === code);
 
-export { routes, airlines, airports, getAirlineById, getAirportByCode };
+const getAirlineByName = (name) =>
+  airlines.filter((airline) => airline.name === name)[0];
+
+const getAirportByName = (name) =>
+  airports.filter((airport) => airport.name === name)[0];
+
+export {
+  routes,
+  airlines,
+  airports,
+  getAirlineById,
+  getAirportByCode,
+  getAirlineByName,
+  getAirportByName,
+};
