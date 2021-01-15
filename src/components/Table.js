@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 
-export default function Table({ columns, rows, format }) {
+export default function Table({ columns, rows, format, page }) {
   const currentRows = [];
-  const [startIdx, setStartIdx] = useState(0);
-  const increaseIdx = () => setStartIdx((startIdx) => startIdx + 25);
-  const decreaseIdx = () => setStartIdx((startIdx) => startIdx - 25);
 
   if (rows) {
-    for (let i = startIdx; i < startIdx + 25; i++) {
+    for (let i = 25 * (page - 1); i < page * 25; i++) {
       const row = rows[i];
       const data = [];
       for (const prop in row) {
@@ -19,7 +16,6 @@ export default function Table({ columns, rows, format }) {
 
       currentRows.push(
         <tr key={Math.random()}>
-          <td>{i}</td>
           {data.map(({ key, value }) => (
             <td key={Math.random()}>{format(key, value)}</td>
           ))}
@@ -33,7 +29,6 @@ export default function Table({ columns, rows, format }) {
       <table className="routes-table">
         <thead>
           <tr>
-            <th>idx</th>
             {columns &&
               columns.map((column) => (
                 <th key={Math.random()}>{column.name}</th>
@@ -42,15 +37,6 @@ export default function Table({ columns, rows, format }) {
         </thead>
         <tbody>{currentRows && currentRows.map((row) => row)}</tbody>
       </table>
-      <p>
-        Showing {startIdx + 1}-{startIdx + 25} of {rows.length} routes.
-      </p>
-      <button onClick={decreaseIdx} disabled={startIdx === 0}>
-        Previous Page
-      </button>
-      <button onClick={increaseIdx} disabled={startIdx === rows.length - 25}>
-        Next Page
-      </button>
     </>
   );
 }

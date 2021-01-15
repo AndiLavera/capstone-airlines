@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 import "./App.css";
-import { routes, airports, airlines, getAirportByCode } from "./data";
+import { routes, airports, airlines } from "./data";
 import utils from "./utils";
 import Table from "./components/Table";
 import Select from "./components/Select";
-
-// TODO:
-// Pagination bug:
-// - If you are on page 2 and select something that has
-//   less than 25, you will stay on page 2.
+import Pagination from "./components/Pagination";
 
 // These do not need to be reinitialized during each rerender
 const airlineNames = airlines.map(({ name }) => name);
@@ -29,6 +25,7 @@ const App = () => {
     routes,
     airport: "All Airports",
     airline: "All Airlines",
+    page: 1,
   });
 
   const handleAirlines = (value) => {
@@ -41,6 +38,7 @@ const App = () => {
 
       return setState({
         ...state,
+        page: 1,
         routes: routesToSet,
         airline: "All Airlines",
       });
@@ -65,6 +63,7 @@ const App = () => {
 
     setState({
       ...state,
+      page: 1,
       airline,
       routes: routesToSet,
     });
@@ -80,6 +79,7 @@ const App = () => {
 
       return setState({
         ...state,
+        page: 1,
         routes: routesToSet,
         airport: "All Airports",
       });
@@ -104,6 +104,7 @@ const App = () => {
 
     setState({
       ...state,
+      page: 1,
       airport,
       routes: routesToSet,
     });
@@ -112,8 +113,16 @@ const App = () => {
   const handleReset = () => {
     setState({
       routes,
+      page: 1,
       airport: "All Airports",
       airline: "All Airlines",
+    });
+  };
+
+  const handlePagination = (page) => {
+    setState({
+      ...state,
+      page,
     });
   };
 
@@ -123,7 +132,7 @@ const App = () => {
         <h1 className="title">Airline Routes</h1>
       </header>
       <section>
-        <div>
+        <p>
           Show routes on
           <Select
             options={airlineNames}
@@ -149,12 +158,17 @@ const App = () => {
             state={state}
           />
           <button onClick={handleReset}>Show All Routes</button>
+        </p>
+        <div>
+          <Table
+            columns={columns}
+            rows={state.routes}
+            format={utils.formatValue}
+            page={state.page}
+          />
+
+          <Pagination state={state} setState={handlePagination} />
         </div>
-        <Table
-          columns={columns}
-          rows={state.routes}
-          format={utils.formatValue}
-        />
       </section>
     </div>
   );
